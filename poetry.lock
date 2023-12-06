@@ -590,13 +590,17 @@ version = "2.4.0"
 description = "Library for communicating with a Redmine project management application"
 optional = false
 python-versions = ">=3.7, <4"
-files = [
-    {file = "python-redmine-2.4.0.tar.gz", hash = "sha256:29e1c479e6bedc4b193f84dda25121a1a0fcc30969c7f0f6e729c5638749e9d8"},
-    {file = "python_redmine-2.4.0-py3-none-any.whl", hash = "sha256:c9b6ee4465516c1794fe8038b98ddc8bf9d8caa3c0564cf2bc6ea7d4637a2d3a"},
-]
+files = []
+develop = false
 
 [package.dependencies]
 requests = ">=2.28.2"
+
+[package.source]
+type = "git"
+url = "https://github.com/kyokley/python-redmine.git"
+reference = "HEAD"
+resolved_reference = "ff6b7a7e3e77c10bc1ecc15bbd70608cabbad4ea"
 
 [[package]]
 name = "pyxdg"
@@ -706,4 +710,4 @@ test = ["pytest"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "42424b58d4c66cae9ff64531dac493a9f5c5293c47eb1d572d13f667491ef3d0"
+content-hash = "e9454051d6e409caaf1dafe03697fc8aa0998645fda6d2ff7771b4fd9f50eca3"

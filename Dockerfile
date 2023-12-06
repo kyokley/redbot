@@ -24,7 +24,8 @@ RUN apk update && apk add --no-cache \
 WORKDIR /workspace
 
 COPY pyproject.toml poetry.lock ./
-RUN $POETRY_VENV/bin/pip install -U pip poetry && $POETRY_VENV/bin/poetry install --without dev
+RUN $POETRY_VENV/bin/pip install -U pip poetry && \
+        $POETRY_VENV/bin/poetry install --without dev
 
 FROM ${BASE_IMAGE} AS base
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -37,7 +38,7 @@ ENV VIRTUAL_ENV=/venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-RUN $VIRTUAL_ENV/bin/pip install -U pip && $POETRY_VENV/bin/pip install -U pip
+RUN $POETRY_VENV/bin/pip install -U pip
 
 COPY --from=builder $VIRTUAL_ENV $VIRTUAL_ENV
 COPY ./pdbrc.py /root/.pdbrc.py
