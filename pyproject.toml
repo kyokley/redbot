@@ -3,7 +3,6 @@ name = "redbot"
 version = "0.1.0"
 description = ""
 authors = ["Kevin Yokley <kyokley2@gmail.com>"]
-readme = "README.md"
 
 [tool.poetry.scripts]
 redbot = { callable = "src.redbot:main", extras = ["src"] }

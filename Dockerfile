@@ -56,6 +56,6 @@ RUN apk update && apk add --no-cache \
         g++ \
         libffi-dev \
         musl-dev
-COPY . /workspace
+COPY pyproject.toml poetry.lock ./
 RUN $POETRY_VENV/bin/pip install -U pip poetry && $POETRY_VENV/bin/poetry install
 ENTRYPOINT ["redbot"]
