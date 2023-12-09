@@ -7,6 +7,7 @@ from redbot.models import Issue
 
 from redminelib import Redmine
 
+PROJECT_INDEX = 19
 BATCH_RESULTS = 1000
 MAXIMUM_RESULTS = 1000
 
@@ -21,9 +22,11 @@ with open(_key_path) as f:
 
 CLIENT = Redmine('http://redmine.ccbn.net/',
                  key=KEY)
+PROJECT = CLIENT.project.get(PROJECT_INDEX)
 
-def get_issue(issue_name):
-    pass
+def get_issue(key):
+    issue = PROJECT.issues.get(key)
+    return Issue(issue)
 
 
 def get_assignee_issues(assignee=None,
