@@ -25,7 +25,8 @@ WORKDIR /workspace
 
 COPY pyproject.toml poetry.lock ./
 RUN $POETRY_VENV/bin/pip install -U pip poetry && \
-        $POETRY_VENV/bin/poetry install --without dev
+        $POETRY_VENV/bin/poetry build && \
+        pip install -U pip dist/*.whl
 
 FROM ${BASE_IMAGE} AS base
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -35,7 +36,7 @@ ENV POETRY_VENV=/poetry_venv
 RUN python3 -m venv $POETRY_VENV
 
 ENV VIRTUAL_ENV=/venv
-RUN python3 -m venv $VIRTUAL_ENV
+# RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 RUN $POETRY_VENV/bin/pip install -U pip

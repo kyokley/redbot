@@ -5,7 +5,7 @@ description = ""
 authors = ["Kevin Yokley <kyokley2@gmail.com>"]
 
 [tool.poetry.scripts]
-redbot = { callable = "src.redbot:main", extras = ["src"] }
+redbot = {callable = "redbot.redbot:main"}
 
 [tool.poetry.dependencies]
 python = "^3.11"
