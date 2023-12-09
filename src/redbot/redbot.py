@@ -1,7 +1,7 @@
 import argparse
 import requests
-from src.client import get_issue, get_assignee_issues, get_summary_issues
-from src.models import print_key_summary
+from redbot.client import get_issue, get_assignee_issues, get_summary_issues
+from redbot.models import print_key_summary
 
 
 parser = argparse.ArgumentParser(description='RedMine CLI')

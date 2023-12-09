@@ -12,6 +12,7 @@ python = "^3.11"
 rich = "^13.7.0"
 python-dateutil = "^2.8.2"
 python-redmine = {git = "https://github.com/kyokley/python-redmine.git"}
+pysocks = "^1.7.1"
 
 
 [tool.poetry.group.dev.dependencies]
