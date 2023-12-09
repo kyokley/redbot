@@ -1,7 +1,5 @@
 import argparse
-import requests
-from redbot.client import get_issue, get_assignee_issues, get_summary_issues
-from redbot.models import print_key_summary
+from redbot.models import User, Issue
 
 
 parser = argparse.ArgumentParser(description='RedMine CLI')
@@ -61,30 +59,24 @@ def main():
                 for line_or_key in issue_keys:
                     for key in line_or_key.split():
                         try:
-                            issue = get_issue(key)
-                        except requests.exceptions.HTTPError:
-                            print(f'Issue {key} was not found')
+                            issue = Issue.get(key)
+                        except Exception as e:
+                            print(f'Error getting Issue={key} was not found')
+                            print(e)
                             continue
                         issue.print(text_wrap=not args.quiet,
                                     borders=not args.quiet)
             else:
-                rows = get_summary_issues(max_results=args.max_results)
-                print_key_summary(rows,
-                                  text_wrap=not args.quiet,
-                                  borders=not args.quiet)
+                user = User.get()
+                issues = list(user.issues)
+                for issue in issues:
+                    issue.print()
         elif args.subcommand_name in ('assignee',):
             if args.assignee:
-                rows = []
                 for assignee in args.assignee:
-                    rows.extend(get_assignee_issues(assignee=assignee,
-                                                    include_closed=args.include_closed,
-                                                    max_results=args.max_results))
-            else:
-                rows = get_assignee_issues(include_closed=args.include_closed,
-                                           max_results=args.max_results)
-            print_key_summary(rows,
-                              text_wrap=not args.quiet,
-                              borders=not args.quiet)
+                    user = User.get(assignee)
+                    for issue in user.issues:
+                        issue.print()
 
     except KeyboardInterrupt:
         pass
