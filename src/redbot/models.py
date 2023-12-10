@@ -37,7 +37,7 @@ class User:
     USER_INDEX = os.environ.get('USER_INDEX')
 
     def __init__(self, user):
-        self.key = user.id
+        self.key = str(user.id)
         self.name = f'{user.firstname} {user.lastname}'
         self._redmine_obj = user
         self._issue = None
@@ -61,13 +61,13 @@ class User:
 
 class Issue:
     def __init__(self, issue):
-        self.key = issue.id
+        self.key = str(issue.id)
         self.summary = issue.subject
         self.description = issue.description
         self.creator = issue.author
         self.assignee = getattr(issue, 'assigned_to', None)
         self.status = issue.status
-        self.created = issue.created_on
+        self.created = issue.created_on.isoformat()
         self._redmine_obj = issue
 
     @classmethod
