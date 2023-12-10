@@ -62,16 +62,6 @@ class User:
                             for issue in self._redmine_obj.issues]
         return self._issues
 
-    @property
-    def summary_issues(self):
-        return [(issue.key, issue.summary)
-                for issue in self.issues]
-
-    def print_summary_issues(self, borders=True):
-        print_key_summary(self.summary_issues,
-                          borders=borders)
-
-
 
 class Issue:
     def __init__(self, issue):
@@ -121,9 +111,7 @@ class Issue:
         if full:
             print_table(self._get_table_data(), borders=full)
         else:
-            print_table(
-                ((self.key, self.summary),),
-                borders=full)
+            print(f'{self.key:<7} {self.summary}')
 
     def to_dict(self):
         return {
