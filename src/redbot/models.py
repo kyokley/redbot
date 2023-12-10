@@ -1,4 +1,5 @@
 import os
+import json
 
 from rich.table import Table
 from rich.console import Console
@@ -18,7 +19,10 @@ def print_table(data,
                 borders=True):
     table = Table(box=box.ROUNDED if borders else None)
     table.add_column()
-    table.add_column(Align(title, align='center'))
+    if borders:
+        table.add_column(Align(title, align='center'))
+    else:
+        table.add_column()
 
     for row in data:
         table.add_row(*row)
@@ -40,7 +44,7 @@ class User:
         self.key = str(user.id)
         self.name = f'{user.firstname} {user.lastname}'
         self._redmine_obj = user
-        self._issue = None
+        self._issues = None
 
     @classmethod
     def get(cls, key=None):
@@ -53,10 +57,20 @@ class User:
 
     @property
     def issues(self):
-        if self._issue is None:
-            self._issue = [Issue(issue)
-                           for issue in self._redmine_obj.issues]
-        return self._issue
+        if self._issues is None:
+            self._issues = [Issue(issue)
+                            for issue in self._redmine_obj.issues]
+        return self._issues
+
+    @property
+    def summary_issues(self):
+        return [(issue.key, issue.summary)
+                for issue in self.issues]
+
+    def print_summary_issues(self, borders=True):
+        print_key_summary(self.summary_issues,
+                          borders=borders)
+
 
 
 class Issue:
@@ -91,7 +105,7 @@ class Issue:
                                 'creator',
                                 ):
                     attr = getattr(self, data_key)
-                    data = attr.name
+                    data = attr.name if attr is not None else ''
                 elif data_key in ('labels',):
                     data = ' '.join(getattr(self, data_key))
                 else:
@@ -103,8 +117,27 @@ class Issue:
 
         return output
 
-    def print(self, borders=True):
-        print_table(self._get_table_data(), borders=borders)
+    def print(self, full=True):
+        if full:
+            print_table(self._get_table_data(), borders=full)
+        else:
+            print_table(
+                ((self.key, self.summary),),
+                borders=full)
+
+    def to_dict(self):
+        return {
+            'key': self.key,
+            'summary': self.summary,
+            'description': self.description,
+            'creator': self.creator,
+            'assignee': self.assignee,
+            'status': self.status,
+            'created': self.created
+        }
+
+    def to_json(self):
+        return json.dumps(self.to_dict())
 
 
 class Project:
@@ -114,6 +147,14 @@ class Project:
         self.name = project.name
         self.key = project.id
         self._redmine_obj = project
+        self._issues = None
+
+    @property
+    def issues(self):
+        if self._issues is None:
+            self._issues = [Issue(issue)
+                            for issue in self._redmine_obj.issues]
+        return self._issues
 
     @classmethod
     def get(cls):

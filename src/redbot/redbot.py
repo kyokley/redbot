@@ -1,5 +1,5 @@
 import argparse
-from redbot.models import User, Issue
+from redbot.models import User, Issue, Project
 
 
 parser = argparse.ArgumentParser(description='RedMine CLI')
@@ -38,15 +38,6 @@ for cmd in ALL_CMDS:
         '-q', '--quiet',
         action='store_true',
         help='Display output without table formatting or text wrapping.')
-    cmd.add_argument(
-        '--include-closed',
-        action='store_true',
-        help='Include issues with closed status')
-    cmd.add_argument(
-        '--max-results',
-        dest='max_results',
-        type=int,
-        help='Maximum number of results to return')
 
 
 def main():
@@ -64,19 +55,21 @@ def main():
                             print(f'Error getting Issue={key} was not found')
                             print(e)
                             continue
-                        issue.print(text_wrap=not args.quiet,
-                                    borders=not args.quiet)
+                        issue.print(full=not args.quiet)
             else:
-                user = User.get()
-                issues = list(user.issues)
-                for issue in issues:
-                    issue.print()
+                project = Project.get()
+                for issue in project.issues:
+                    issue.print(full=not args.quiet)
         elif args.subcommand_name in ('assignee',):
             if args.assignee:
-                for assignee in args.assignee:
-                    user = User.get(assignee)
-                    for issue in user.issues:
-                        issue.print()
+                indices = args.assignee
+            else:
+                indices = [User.USER_INDEX]
+
+            for assignee in indices:
+                user = User.get(assignee)
+                for issue in user.issues:
+                    issue.print(full=not args.quiet)
 
     except KeyboardInterrupt:
         pass
